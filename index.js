@@ -2,6 +2,8 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
+var morgan = require('morgan')
+app.use(morgan('tiny'))
 
 let persons= [
     {
