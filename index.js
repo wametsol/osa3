@@ -1,5 +1,7 @@
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
+app.use(bodyParser.json())
 let persons= [
     {
       "name": "Arto Hellas",
@@ -22,8 +24,32 @@ let persons= [
       "id": 4
     }
   ]
+const generateId = () =>{
+    const id = Math.floor(Math.random()*(persons.length*100)+5 )
+    const onkoOlemassa = persons.find(person => person.id === id)
+    if(onkoOlemassa){
+        return generateId()
+    }else{
+        return id
+    }
+    
+}
 app.get('/', (req, res) => {
     res.send('<h1>Hello World!</h1>')
+})
+
+app.post('/api/persons', (req, res) => {
+    const body = req.body
+    const person = {
+        name: body.name,
+        number: body.number,
+        id:generateId()
+    }
+    
+    console.log(person);
+    persons = persons.concat(person)
+    res.json(person)
+    
 })
 
 app.get('/info', (req, res) =>{
