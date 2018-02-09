@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+app.use(express.static('build'))
 const bodyParser = require('body-parser')
 const cors = require('cors')
 app.use(bodyParser.json())
@@ -43,7 +44,7 @@ const generateId = () =>{
     
 }
 app.get('/', (req, res) => {
-    res.send('<h1>Hello World!</h1>')
+    res.send(build/index.html)
 })
 
 app.post('/api/persons', (req, res) => {
