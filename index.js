@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
+
 let persons= [
     {
       "name": "Arto Hellas",
@@ -25,6 +26,7 @@ let persons= [
     }
   ]
 const generateId = () =>{
+    
     const id = Math.floor(Math.random()*(persons.length*100)+5 )
     const onkoOlemassa = persons.find(person => person.id === id)
     if(onkoOlemassa){
@@ -40,11 +42,21 @@ app.get('/', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
     const body = req.body
+    if(body.name === "" ){
+        return res.status(400).json({error: 'name missing'})
+    }
+    if( body.number === ""){
+        return res.status(400).json({error: 'number missing'})
+    }
+    if(persons.find(person => person.name === body.name)){
+        return res.status(400).json({error: 'name must be unique'})
+    }
     const person = {
         name: body.name,
         number: body.number,
         id:generateId()
     }
+    
     
     console.log(person);
     persons = persons.concat(person)
