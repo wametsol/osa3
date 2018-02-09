@@ -1,13 +1,14 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const cors = require('cors')
 app.use(bodyParser.json())
 var morgan = require('morgan')
 morgan.token('person', function getPerson(req){
     return JSON.stringify(req.body)
 })
 app.use(morgan(':method :url :person  :status :res[content-length] - :response-time ms'))
-
+app.use(cors())
 let persons= [
     {
       "name": "Arto Hellas",
