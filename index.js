@@ -65,13 +65,16 @@ app.post('/api/persons', (req, res) => {
 
 app.get('/info', (req, res) =>{
     
-    console.log(persons);
-    
-    var maara = persons.length
-    console.log(maara);
     const date = new Date()
-    res.send(`<p>puhelin luettelossa  ${maara}  henkilön tiedot </p>
-    <p>${date}</p>`)
+    Person
+    .find({})
+    .then(persons => {
+        console.log(persons.length);
+        res.send(`<p>puhelin luettelossa  ${persons.length}  henkilön tiedot </p>
+        <p>${date}</p>`)
+        
+    })
+  
 
 })
 
@@ -117,6 +120,8 @@ app.get('/api/persons', (req, res) =>{
     Person
     .find({})
     .then(persons => {
+        console.log(persons.length);
+        
         res.json(persons.map(formatPerson))
     })
     
