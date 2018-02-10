@@ -33,7 +33,7 @@ app.put('/api/persons/:id', (req, res) =>{
         number: body.number
     }
     
-    Person.findOneAndUpdate(body.name, {number: body.number})
+    Person.findOneAndUpdate({name: body.name}, {number: body.number})
     .then(updatedPerson => {
         res.json(formatPerson(updatedPerson))
 
