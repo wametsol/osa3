@@ -58,6 +58,7 @@ app.post('/api/persons', (req, res) => {
 
     if(Person.findOne({name: body.name})){
         console.log("löyty");
+        return res.status(400).json({error : 'Name exists'})
         
     }
     /*
