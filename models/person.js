@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const url = 'mongodb://fullstack:***@ds229008.mlab.com:29008/fullstack-persons'
+const url = 'mongodb://fullstack:kukka123@ds229008.mlab.com:29008/fullstack-persons'
 mongoose.connect(url)
 const Person = mongoose.model('Person', {
     name: String,
