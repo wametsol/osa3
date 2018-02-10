@@ -56,11 +56,16 @@ app.post('/api/persons', (req, res) => {
     }
     
 
-    if(Person.findOne({name: body.name})){
+    Person.findOne({name: body.name})
+    .then(result => {
         console.log("löyty");
         return res.status(400).json({error : 'Name exists'})
+        .catch(error => {
+            console.log(error);
+            
+        })
         
-    }
+    })
     /*
     if(Person.find(person => person.name === body.name)){
         return res.status(400).json({error: 'name must be unique'})
