@@ -1,5 +1,5 @@
 const express = require('express')
-const app = express()
+const app = express( )
 app.use(express.static('build'))
 
 const bodyParser = require('body-parser')
@@ -13,162 +13,127 @@ const Person = require('./models/person')
 
 var morgan = require('morgan')
 morgan.token('person', function getPerson(req){
-    return JSON.stringify(req.body)
+  return JSON.stringify(req.body)
 })
 app.use(morgan(':method :url :person  :status :res[content-length] - :response-time ms'))
 
-
-const generateId = () =>{
-    return ('', Math.random().toString(36).substr(2,9))
-  
-    
+const generateId = () => {
+  return ('', Math.random().toString(36).substr(2,9))
 }
 app.get('/', (req, res) => {
-    res.send(build/index.html)
+  res.send(build/index.html)
 })
-app.put('/api/persons/:id', (req, res) =>{
-    const body = req.body
-    const person ={
-        name: body.name,
-        number: body.number
-    }
-    
-    Person.findOneAndUpdate({name: body.name}, {number: body.number})
+app.put('/api/persons/:id', (req, res) => {
+  const body = req.body
+  Person.findOneAndUpdate({ name: body.name }, { number: body.number })
     .then(updatedPerson => {
-        if(updatedPerson){
+      if(updatedPerson){
         res.json(formatPerson(updatedPerson))
-        }else{
-            res.status(404).end()
-        }
+      }else{
+        res.status(404).end()
+      }
 
     })
     .catch(error => {
-        console.log(error)
-        res.status(400).send({error: 'malformatted id '})
-        
+      //console.log(error)
+      res.status(400).send({ error: 'malformatted id ' })
     })
 })
 app.post('/api/persons', (req, res) => {
-    const body = req.body
-    console.log(body);
-    
-    if(body.name === "" ){
-        return res.status(400).json({error: 'name missing'})
-        
-    }
-    if( body.number === ""){
-        return res.status(400).json({error: 'number missing'})
-    }
-    
-    
-    Person.findOne({name: body.name})
+  const body = req.body
+  //  console.log(body);
+  if(body.name === '' ){
+    return res.status(400).json({ error: 'name missing' })
+  }
+  if( body.number === ''){
+    return res.status(400).json({ error: 'number missing' })
+  }
+  Person.findOne({ name: body.name })
     .then(result => {
-        
-        if(result){
-        console.log('Tökkii tässä',body.name);
-        return res.status(400).json({error : 'Name exists'})
-        }
-        console.log('Kikkelis', result);
-        
-        
-        
+      if(result){
+        //console.log('Tökkii tässä',body.name);
+        return res.status(400).json({ error : 'Name exists' })
+      }
+    //     console.log('Kikkelis', result);
     })
     .catch(error => {
-        console.log('Menee erroriin asti',error);
-        
+      //console.log('Menee erroriin asti',error);
     })
-
     /*
     if(Person.find(person => person.name === body.name)){
         return res.status(400).json({error: 'name must be unique'})
         .catch(error => {
             console.log(error);
-            
         })
     }
     */
-    const person = new Person({
-        name: body.name,
-        number: body.number,
-        id:generateId()
-    })
-    person
+  const person = new Person({
+    name: body.name,
+    number: body.number,
+    id:generateId()
+  })
+  person
     .save()
     .then(savedPerson => {
-        res.json(formatPerson(savedPerson))
+      res.json(formatPerson(savedPerson))
     })
-    
-    
-    
-    
 })
 
-app.get('/info', (req, res) =>{
-    
-    const date = new Date()
-    Person
+app.get('/info', (req, res) => {
+  const date = new Date()
+  Person
     .find({})
     .then(persons => {
-        console.log(persons.length);
-        res.send(`<p>puhelin luettelossa  ${persons.length}  henkilön tiedot </p>
+      //console.log(persons.length);
+      res.send(`<p>puhelin luettelossa  ${persons.length}  henkilön tiedot </p>
         <p>${date}</p>`)
-        
     })
-  
-
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-    Person
+  Person
     .findByIdAndRemove(req.params.id)
-    .then(result => {
-        res.status(204).end()
+    .then(res => {
+      res.status(204).end()
     })
     .catch(error => {
-        res.status(400).send({error: 'malformatted id'})
+      res.status(400).send({ error: 'malformatted id' })
     })
 })
 
-app.get('/api/persons/:id', (req, res) =>{
+app.get('/api/persons/:id', (req, res) => {
 
-    Person
+  Person
     .findById(req.params.id)
     .then(person => {
-        if(person){
-            res.json(formatPerson(person))
-        }else{
-            res.status(404).end()
-        }
-        
+      if(person){
+        res.json(formatPerson(person))
+      }else{
+        res.status(404).end()
+      }
     })
     .catch(error => {
-        console.log(error)
-        res.status(400).send({error: 'malformatted id'})
-        
+    //console.log(error)
+      res.status(400).send({ error: 'malformatted id' })
     })
-   
 })
 
-const formatPerson = (person) =>{
-    return{
-        name: person.name,
-        number: person.number,
-        id: person._id
-    }
+const formatPerson = (person) => {
+  return{
+    name: person.name,
+    number: person.number,
+    id: person._id
+  }
 }
-app.get('/api/persons', (req, res) =>{
-    Person
+app.get('/api/persons', (req, res) => {
+  Person
     .find({})
     .then(persons => {
-        console.log(persons.length);
-        
-        res.json(persons.map(formatPerson))
+    //console.log(persons.length);
+      res.json(persons.map(formatPerson))
     })
-    
 })
-
-
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
+  console.log(`Server running on port ${PORT}`)
 })
