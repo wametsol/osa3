@@ -35,7 +35,11 @@ app.put('/api/persons/:id', (req, res) =>{
     
     Person.findOneAndUpdate({name: body.name}, {number: body.number})
     .then(updatedPerson => {
+        if(updatedPerson){
         res.json(formatPerson(updatedPerson))
+        }else{
+            res.status(404).end()
+        }
 
     })
     .catch(error => {
@@ -50,22 +54,30 @@ app.post('/api/persons', (req, res) => {
     
     if(body.name === "" ){
         return res.status(400).json({error: 'name missing'})
+        
     }
     if( body.number === ""){
         return res.status(400).json({error: 'number missing'})
     }
     
-
+    
     Person.findOne({name: body.name})
     .then(result => {
-        console.log("löyty");
+        
+        if(result){
+        console.log('Tökkii tässä',body.name);
         return res.status(400).json({error : 'Name exists'})
-        .catch(error => {
-            console.log(error);
-            
-        })
+        }
+        console.log('Kikkelis', result);
+        
+        
         
     })
+    .catch(error => {
+        console.log('Menee erroriin asti',error);
+        
+    })
+
     /*
     if(Person.find(person => person.name === body.name)){
         return res.status(400).json({error: 'name must be unique'})
